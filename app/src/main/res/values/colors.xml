@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="lc_background">#0D1B14</color>
+    <color name="lc_surface">#16281E</color>
+    <color name="lc_surface_variant">#1E3528</color>
+    <color name="lc_text">#F1F8F4</color>
+    <color name="lc_hint">#9DBBAA</color>
+    <color name="lc_accent">#22C55E</color>
+    <color name="lc_accent_dark">#15803D</color>
+    <color name="lc_on_primary">#04120C</color>
+    <color name="lc_ingreso">#22C55E</color>
+    <color name="lc_egreso">#F26D6D</color>
+</resources>

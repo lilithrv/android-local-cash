@@ -1,0 +1,9 @@
+<resources>
+    <!-- Tipos de cuenta que se muestran en el Spinner de la vista de Cuentas -->
+    <string-array name="ac_tipos_cuenta">
+        <item>Efectivo</item>
+        <item>Ahorro</item>
+        <item>Tarjeta</item>
+        <item>Otro</item>
+    </string-array>
+</resources>

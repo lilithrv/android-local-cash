@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name">LocalCash</string>
+
+    <!-- Paginación de listas -->
+    <string name="paginador_anterior">◀ Anterior</string>
+    <string name="paginador_siguiente">Siguiente ▶</string>
+    <string name="paginador_pagina">Página %1$d de %2$d</string>
+
+    <!-- Acceso / Login (al_) -->
+    <string name="al_logo">Logo de LocalCash</string>
+    <string name="al_con_perfil">Toca para desbloquear con tu huella</string>
+    <string name="al_sin_perfil">Configura tu perfil para comenzar</string>
+    <string name="al_sin_biometria">No hay huella registrada en el dispositivo. Usa tu PIN de respaldo</string>
+    <string name="al_btndesbloquear">Desbloquear</string>
+    <string name="al_pin_titulo">PIN de respaldo</string>
+    <string name="al_pin_hint">Ingresa tu PIN</string>
+    <string name="al_pin_ok">Entrar</string>
+    <string name="al_pin_cancelar">Cancelar</string>
+    <string name="al_pin_incorrecto">PIN incorrecto</string>
+
+    <!-- Setup / Perfil (as_) -->
+    <string name="as_titulo">Crear perfil local</string>
+    <string name="as_subtitulo">Tus datos se guardan solo en este dispositivo</string>
+    <string name="as_etnombre">Tu nombre</string>
+    <string name="as_etpin">PIN de respaldo (mínimo 4 dígitos)</string>
+    <string name="as_btncrear">Crear perfil</string>
+    <string name="as_error_nombre">Ingrese su nombre</string>
+    <string name="as_error_pin">El PIN debe tener al menos 4 dígitos</string>
+    <string name="as_perfil_creado">Perfil creado. Ahora desbloquea con tu huella</string>
+
+    <!-- Home / Panel (ah_) -->
+    <string name="ah_saludo_defecto">¡Hola!</string>
+    <string name="ah_saludo">¡Hola, %1$s!</string>
+    <string name="ah_subtitulo">Tus finanzas, privadas y sin conexión</string>
+    <string name="ah_saldo_label">Saldo total</string>
+    <string name="ah_saldo_defecto">$0</string>
+    <string name="ah_saldo_total">$%1$,.0f</string>
+    <string name="ah_modulos">Módulos</string>
+    <string name="ah_btncuentas">Cuentas</string>
+    <string name="ah_btnmovimientos">Movimientos</string>
+    <string name="ah_btnmapa">Mapa de movimientos</string>
+    <string name="ah_btncompras">Compras e historial</string>
+    <string name="ah_btngastos">Gastos compartidos</string>
+    <string name="ah_btncontactos">Contactos</string>
+
+    <!-- Contactos (acon_) -->
+    <string name="acon_titulo">Agenda de contactos</string>
+    <string name="acon_etnombre">Nombre</string>
+    <string name="acon_ettelefono">Teléfono</string>
+    <string name="acon_etemail">Email</string>
+    <string name="acon_btnagregar">Agregar contacto</string>
+    <string name="acon_btneliminar">Eliminar</string>
+    <string name="acon_lista">Contactos guardados</string>
+    <string name="acon_error_nombre">Ingrese el nombre</string>
+    <string name="acon_error_email">Email no válido</string>
+    <string name="acon_eliminado">Contacto eliminado</string>
+    <string name="acon_btnguardar_cambios">Guardar cambios</string>
+    <string name="acon_btncancelar">Cancelar edición</string>
+    <string name="acon_actualizado">Contacto actualizado</string>
+
+    <!-- Cuentas (ac_) -->
+    <string name="ac_titulo">Mis cuentas</string>
+    <string name="ac_etnombre">Nombre de la cuenta</string>
+    <string name="ac_etsaldo">Saldo inicial</string>
+    <string name="ac_btnagregar">Agregar cuenta</string>
+    <string name="ac_btneliminar">Eliminar</string>
+    <string name="ac_lista">Cuentas registradas</string>
+    <string name="ac_error_nombre">Ingrese el nombre de la cuenta</string>
+    <string name="ac_eliminada">Cuenta eliminada</string>
+    <string name="ac_btnguardar_cambios">Guardar cambios</string>
+    <string name="ac_btncancelar">Cancelar edición</string>
+    <string name="ac_actualizada">Cuenta actualizada</string>
+    <string name="ac_toca_editar">Toca una cuenta para editarla</string>
+
+    <!-- Movimientos (amv_) -->
+    <string name="amv_titulo">Movimientos</string>
+    <string name="amv_ingreso">Ingreso</string>
+    <string name="amv_egreso">Egreso</string>
+    <string name="amv_etmonto">Monto</string>
+    <string name="amv_etdescripcion">Descripción</string>
+    <string name="amv_geo">Guardar ubicación de este movimiento</string>
+    <string name="amv_btnagregar">Agregar</string>
+    <string name="amv_btnmapa">Ver mapa</string>
+    <string name="amv_lista">Movimientos de la cuenta</string>
+    <string name="amv_item_geo">📍 Con ubicación</string>
+    <string name="amv_error_monto">Ingrese un monto válido</string>
+    <string name="amv_sin_cuentas">Primero crea una cuenta</string>
+    <string name="amv_sin_ubicacion">No se pudo obtener la ubicación; se guardó sin geolocalización</string>
+    <string name="amv_permiso_denegado">Permiso de ubicación denegado</string>
+    <string name="amv_btneliminar">Eliminar</string>
+    <string name="amv_btnguardar_cambios">Guardar cambios</string>
+    <string name="amv_btncancelar">Cancelar edición</string>
+    <string name="amv_actualizado">Movimiento actualizado</string>
+    <string name="amv_eliminado">Movimiento eliminado</string>
+    <string name="amv_toca_editar">Toca un movimiento para editarlo</string>
+    <string name="amv_eliminar_titulo">Eliminar movimiento</string>
+    <string name="amv_eliminar_mensaje">¿Eliminar este movimiento? Esta acción no se puede deshacer.</string>
+    <string name="amv_eliminar_confirmar">Eliminar</string>
+    <string name="amv_eliminar_cancelar">Cancelar</string>
+
+    <!-- Mapa (amap_) -->
+    <string name="amap_titulo">Mapa de movimientos</string>
+    <string name="amap_vacio">Aún no hay movimientos con ubicación. Activa la ubicación al registrar un movimiento.</string>
+
+    <!-- Compras (acp_) -->
+    <string name="acp_titulo">Compras</string>
+    <string name="acp_ettitulo">¿Qué compraste o comprarás?</string>
+    <string name="acp_etmonto">Monto estimado</string>
+    <string name="acp_realizada">Realizada</string>
+    <string name="acp_agendada">Agendada</string>
+    <string name="acp_contacto">Enlazar a un contacto (opcional)</string>
+    <string name="acp_sin_contacto">Sin contacto</string>
+    <string name="acp_btnagregar">Agregar compra</string>
+    <string name="acp_btneliminar">Eliminar</string>
+    <string name="acp_lista">Historial y agendadas</string>
+    <string name="acp_error_titulo">Ingrese la compra</string>
+    <string name="acp_eliminada">Compra eliminada</string>
+    <string name="acp_btnguardar_cambios">Guardar cambios</string>
+    <string name="acp_btncancelar">Cancelar edición</string>
+    <string name="acp_actualizada">Compra actualizada</string>
+    <string name="acp_toca_editar">Toca una compra para editarla o marcarla como realizada</string>
+
+    <!-- Gastos compartidos (agc_) -->
+    <string name="agc_titulo">Gasto compartido</string>
+    <string name="agc_ettitulo">Título (ej. Cena del viernes)</string>
+    <string name="agc_productos">Productos o servicios</string>
+    <string name="agc_producto_nombre">Producto</string>
+    <string name="agc_producto_precio">Precio</string>
+    <string name="agc_btnproducto">Agregar producto</string>
+    <string name="agc_quitar">Quitar</string>
+    <string name="agc_total">Total: $%1$,.0f</string>
+    <string name="agc_participantes">Participantes (de tu agenda)</string>
+    <string name="agc_sin_contactos">No tienes contactos. Agrégalos en la sección Contactos.</string>
+    <string name="agc_btnguardar">Guardar y repartir</string>
+    <string name="agc_lista">Gastos compartidos guardados</string>
+    <string name="agc_error_titulo">Ingrese un título</string>
+    <string name="agc_error_producto">Ingrese el producto</string>
+    <string name="agc_error_precio">Ingrese un precio válido</string>
+    <string name="agc_falta_producto">Agregue al menos un producto</string>
+    <string name="agc_falta_participante">Seleccione al menos un participante</string>
+    <string name="agc_guardado">Gasto compartido guardado</string>
+    <string name="agc_toca_gasto">Toca un gasto para ver el detalle y marcar quién pagó</string>
+    <string name="agc_resumen_pago">%1$d/%2$d pagaron · pendiente $%3$,.0f</string>
+
+    <!-- Deudas (ade_) -->
+    <string name="ade_titulo">Deudas</string>
+    <string name="ade_total">Total del gasto: $%1$,.0f</string>
+    <string name="ade_participantes">¿Cuánto debe pagar cada uno?</string>
+    <string name="ade_monto">Monto</string>
+    <string name="ade_pagado">Pagado</string>
+    <string name="ade_btnequitativo">Reparto equitativo</string>
+    <string name="ade_btnguardar">Guardar deudas</string>
+    <string name="ade_resumen">Asignado: $%1$,.0f de $%2$,.0f  ·  %3$s</string>
+    <string name="ade_cuadra">✓ cuadra</string>
+    <string name="ade_no_cuadra">⚠ no cuadra</string>
+    <string name="ade_guardado">Deudas actualizadas</string>
+    <string name="ade_no_encontrado">Gasto no encontrado</string>
+    <string name="ade_productos">Detalle de productos</string>
+    <string name="ade_btneliminar">Eliminar gasto</string>
+    <string name="ade_eliminar_titulo">Eliminar gasto</string>
+    <string name="ade_eliminar_mensaje">¿Eliminar este gasto compartido y todas sus deudas? Esta acción no se puede deshacer.</string>
+    <string name="ade_eliminar_confirmar">Eliminar</string>
+    <string name="ade_eliminar_cancelar">Cancelar</string>
+    <string name="ade_eliminado">Gasto eliminado</string>
+    <string name="ade_quitar">✕</string>
+    <string name="ade_dueno">Tú (%1$s): $%2$,.0f</string>
+    <string name="ade_btnagregar_participante">Agregar participante</string>
+    <string name="ade_agregar_participante_titulo">Agregar participante</string>
+    <string name="ade_sin_contactos_disponibles">No hay más contactos para agregar</string>
+    <string name="ade_producto_agregado">Producto agregado</string>
+    <string name="ade_participante_agregado">Participante agregado</string>
+</resources>

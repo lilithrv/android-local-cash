@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.LocalCash" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/lc_accent</item>
+        <item name="colorOnPrimary">@color/lc_on_primary</item>
+        <item name="colorPrimaryContainer">@color/lc_accent_dark</item>
+        <item name="colorOnPrimaryContainer">@color/lc_text</item>
+        <item name="colorSecondary">@color/lc_accent</item>
+        <item name="colorOnSecondary">@color/lc_on_primary</item>
+        <item name="colorSecondaryContainer">@color/lc_surface_variant</item>
+        <item name="colorOnSecondaryContainer">@color/lc_text</item>
+
+        <item name="android:colorBackground">@color/lc_background</item>
+        <item name="colorSurface">@color/lc_surface</item>
+        <item name="colorOnSurface">@color/lc_text</item>
+        <item name="colorSurfaceVariant">@color/lc_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/lc_hint</item>
+        <item name="colorOutline">@color/lc_hint</item>
+
+        <item name="android:statusBarColor">@color/lc_background</item>
+        <item name="android:navigationBarColor">@color/lc_background</item>
+
+        <item name="materialButtonStyle">@style/Widget.LocalCash.Button</item>
+    </style>
+</resources>

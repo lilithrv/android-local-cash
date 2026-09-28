@@ -1,0 +1,52 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema base  -->
+    <style name="Base.Theme.LocalCash" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Marca -->
+        <item name="colorPrimary">@color/lc_accent</item>
+        <item name="colorOnPrimary">@color/lc_on_primary</item>
+        <item name="colorPrimaryContainer">@color/lc_accent_dark</item>
+        <item name="colorOnPrimaryContainer">@color/lc_text</item>
+        <item name="colorSecondary">@color/lc_accent</item>
+        <item name="colorOnSecondary">@color/lc_on_primary</item>
+        <item name="colorSecondaryContainer">@color/lc_surface_variant</item>
+        <item name="colorOnSecondaryContainer">@color/lc_text</item>
+
+        <!-- Superficies y fondo -->
+        <item name="android:colorBackground">@color/lc_background</item>
+        <item name="colorSurface">@color/lc_surface</item>
+        <item name="colorOnSurface">@color/lc_text</item>
+        <item name="colorSurfaceVariant">@color/lc_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/lc_hint</item>
+        <item name="colorOutline">@color/lc_hint</item>
+
+        <!-- Barras del sistema -->
+        <item name="android:statusBarColor">@color/lc_background</item>
+        <item name="android:navigationBarColor">@color/lc_background</item>
+
+        <!-- Estilos por defecto de componentes -->
+        <item name="materialButtonStyle">@style/Widget.LocalCash.Button</item>
+    </style>
+
+    <style name="Theme.LocalCash" parent="Base.Theme.LocalCash" />
+
+    <!-- Botón principal -->
+    <style name="Widget.LocalCash.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">14dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Botón de menú (Home)  -->
+    <style name="Widget.LocalCash.Menu" parent="Widget.Material3.Button.TonalButton">
+        <item name="cornerRadius">14dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/lc_text</item>
+    </style>
+</resources>
