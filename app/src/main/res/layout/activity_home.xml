@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lc_background"
+    tools:context=".HomeActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvSaludo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_saludo_defecto"
+                android:textColor="@color/lc_text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_subtitulo"
+                android:textColor="@color/lc_hint"
+                android:textSize="14sp" />
+
+            <!-- Tarjeta de saldo total -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="@color/lc_surface"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="22dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ah_saldo_label"
+                        android:textColor="@color/lc_hint"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvSaldoTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/ah_saldo_defecto"
+                        android:textColor="@color/lc_accent"
+                        android:textSize="36sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/ah_modulos"
+                android:textColor="@color/lc_hint"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnCuentas"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btncuentas" />
+
+            <Button
+                android:id="@+id/btnMovimientos"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btnmovimientos" />
+
+            <Button
+                android:id="@+id/btnMapa"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btnmapa" />
+
+            <Button
+                android:id="@+id/btnCompras"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btncompras" />
+
+            <Button
+                android:id="@+id/btnGastosCompartidos"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btngastos" />
+
+            <Button
+                android:id="@+id/btnContactos"
+                style="@style/Widget.LocalCash.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ah_btncontactos" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
