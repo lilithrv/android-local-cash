@@ -26,9 +26,6 @@ MapaActivity extends BaseActivity {
     // Centro por defecto (Santiago de Chile) cuando aún no hay movimientos con ubicación
     private static final GeoPoint CENTRO_DEFECTO = new GeoPoint(-33.4489, -70.6693);
 
-    // User-Agent único y descriptivo exigido por la política de uso de tiles de OpenStreetMap.
-    private static final String USER_AGENT = "Mapas / (leslie@mail.com)";
-
     MapView map;
     TextView tvVacio;
 
@@ -40,7 +37,9 @@ MapaActivity extends BaseActivity {
         // osmdroid debe configurarse (user agent y caché) antes de inflar el MapView.
         Configuration.getInstance().load(this,
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Configuration.getInstance().setUserAgentValue(USER_AGENT);
+        // OpenStreetMap exige un User-Agent único que identifique la app
+        // nombre del paquete para cumplir política y evitar el bloqueo 403
+        Configuration.getInstance().setUserAgentValue(getPackageName());
 
         setContentView(R.layout.activity_mapa);
         configurarBarra(getString(R.string.amap_titulo));
