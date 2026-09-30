@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localcash.datos.MovimientoRepositorio;
@@ -34,18 +35,16 @@ MapaActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // osmdroid debe configurarse (user agent y caché) antes de inflar el MapView.
-        Configuration.getInstance().load(this,
-                PreferenceManager.getDefaultSharedPreferences(this));
-        // OpenStreetMap exige un User-Agent único que identifique la app
-        // nombre del paquete para cumplir política y evitar el bloqueo 403
-        Configuration.getInstance().setUserAgentValue(getPackageName());
-
+        // osmdroid: cargar configuración (lee las SharedPreferences).
+        Configuration.getInstance().setUserAgentValue("Mapa / (lelsiev@gmail.com)");
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mapa);
         configurarBarra(getString(R.string.amap_titulo));
 
         map = findViewById(R.id.map);
         tvVacio = findViewById(R.id.tvVacio);
+
+        Configuration.getInstance().setUserAgentValue("LocalCash/1.0 (lesliev@gmail.com)");
 
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
