@@ -50,11 +50,15 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
     public void onBindViewHolder(@NonNull CompraViewHolder holder, int position) {
         Compra compra = compras.get(position);
         holder.tvTitulo.setText(compra.getTitulo());
-        holder.tvMonto.setText(String.format(Formato.CL, "$%,.0f", compra.getMonto()));
+        // Monto vigente: estimado si sigue agendada, real si ya se realizó
+        holder.tvMonto.setText(String.format(Formato.CL, "$%,.0f", compra.getMontoVigente()));
 
-        // Estado y contacto asociado (si tiene).
+        // Estado, fecha, lugar y contacto asociado (si tienen)
         String estado = compra.esAgendada() ? "Agendada" : "Realizada";
         String detalle = estado + "  ·  " + compra.getFecha();
+        if (compra.getLugarNombre() != null && !compra.getLugarNombre().isEmpty()) {
+            detalle += "  ·  " + compra.getLugarNombre();
+        }
         if (compra.getContactoNombre() != null && !compra.getContactoNombre().isEmpty()) {
             detalle += "  ·  " + compra.getContactoNombre();
         }

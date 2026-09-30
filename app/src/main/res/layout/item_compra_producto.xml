@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lc_text" />
+
+        <TextView
+            android:id="@+id/tvPrecioEstimado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lc_hint"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Precio real: visible solo cuando la compra está marcada como realizada -->
+    <EditText
+        android:id="@+id/etPrecioReal"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/acp_precio_real_hint"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:textColor="@color/lc_text"
+        android:textColorHint="@color/lc_hint"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnQuitar"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:text="@string/acp_quitar" />
+
+</LinearLayout>

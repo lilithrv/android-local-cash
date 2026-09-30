@@ -28,82 +28,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <EditText
-            android:id="@+id/etTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/acp_ettitulo"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:textColor="@color/lc_text"
-            android:textColorHint="@color/lc_hint" />
-
-        <EditText
-            android:id="@+id/etMonto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/acp_etmonto"
-            android:inputType="numberDecimal"
-            android:minHeight="48dp"
-            android:textColor="@color/lc_text"
-            android:textColorHint="@color/lc_hint" />
-
-        <RadioGroup
-            android:id="@+id/rgEstado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbRealizada"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="@string/acp_realizada"
-                android:textColor="@color/lc_text" />
-
-            <RadioButton
-                android:id="@+id/rbAgendada"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/acp_agendada"
-                android:textColor="@color/lc_text" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/acp_contacto"
-            android:textColor="@color/lc_hint" />
-
-        <Spinner
-            android:id="@+id/spContacto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:minHeight="48dp" />
-
         <Button
-            android:id="@+id/btnAgregar"
+            android:id="@+id/btnNueva"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/acp_btnagregar" />
-
-        <Button
-            android:id="@+id/btnCancelar"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/acp_btncancelar"
-            android:visibility="gone" />
+            android:text="@string/acp_nueva" />
 
         <TextView
             android:layout_width="wrap_content"

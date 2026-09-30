@@ -99,12 +99,12 @@
     <string name="amv_eliminar_cancelar">Cancelar</string>
 
     <!-- Mapa (amap_) -->
-    <string name="amap_titulo">Mapa de movimientos</string>
-    <string name="amap_vacio">Aún no hay movimientos con ubicación. Activa la ubicación al registrar un movimiento.</string>
+    <string name="amap_titulo">Mapa de movimientos y compras</string>
+    <string name="amap_vacio">Aún no hay movimientos ni compras con ubicación. Activa la ubicación al registrar un movimiento o elige el lugar de una compra.</string>
 
     <!-- Compras (acp_) -->
     <string name="acp_titulo">Compras</string>
-    <string name="acp_ettitulo">¿Qué compraste o comprarás?</string>
+    <string name="acp_ettitulo">Nombre lista</string>
     <string name="acp_etmonto">Monto estimado</string>
     <string name="acp_realizada">Realizada</string>
     <string name="acp_agendada">Agendada</string>
@@ -119,6 +119,40 @@
     <string name="acp_btncancelar">Cancelar edición</string>
     <string name="acp_actualizada">Compra actualizada</string>
     <string name="acp_toca_editar">Toca una compra para editarla o marcarla como realizada</string>
+
+    <!-- Compras: lista y detalle (carrito) -->
+    <string name="acp_nueva">+ Nueva compra</string>
+    <string name="acp_detalle_nueva">Nueva compra</string>
+    <string name="acp_detalle_editar">Editar compra</string>
+    <string name="acp_estado">Estado</string>
+    <string name="acp_productos">Productos del carrito</string>
+    <string name="acp_prod_nombre">Producto)</string>
+    <string name="acp_prod_precio">Precio</string>
+    <string name="acp_btnprod">Agregar producto</string>
+    <string name="acp_quitar">Quitar</string>
+    <string name="acp_precio_real_hint">Real</string>
+    <string name="acp_total_estimado">Total estimado: $%1$,.0f</string>
+    <string name="acp_monto_real_titulo">Monto real (lo que gastaste)</string>
+    <string name="acp_total_real">Total real</string>
+    <string name="acp_lugar">Lugar</string>
+    <string name="acp_elegir_lugar">Elegir lugar en el mapa</string>
+    <string name="acp_sin_lugar">Sin lugar</string>
+    <string name="acp_btnguardar">Guardar compra</string>
+    <string name="acp_falta_producto">Agregue al menos un producto</string>
+    <string name="acp_error_precio">Ingrese un precio válido</string>
+    <string name="acp_guardada">Compra guardada</string>
+
+    <!-- Selector de ubicación (asu_) -->
+    <string name="asu_titulo">Elegir lugar</string>
+    <string name="asu_ayuda">Toca el mapa para marcar el lugar, usa tu ubicación o búscalo por nombre.</string>
+    <string name="asu_nombre_hint">Nombre del lugar (ej. Unimarc)</string>
+    <string name="asu_buscar">Buscar</string>
+    <string name="asu_buscando">Buscando…</string>
+    <string name="asu_usar_ubicacion">Usar mi ubicación</string>
+    <string name="asu_guardar">Guardar lugar</string>
+    <string name="asu_sin_resultado">No se encontró ese lugar</string>
+    <string name="asu_sin_marcador">Marca un lugar en el mapa antes de guardar</string>
+    <string name="asu_sin_ubicacion">No se pudo obtener tu ubicación actual</string>
 
     <!-- Gastos compartidos (agc_) -->
     <string name="agc_titulo">Gasto compartido</string>

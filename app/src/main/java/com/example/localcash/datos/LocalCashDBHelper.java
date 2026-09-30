@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 public class LocalCashDBHelper extends SQLiteOpenHelper {
 
     public static final String NOMBRE_BD = "localcash.db";
-    public static final int VERSION_BD = 1;
+    public static final int VERSION_BD = 2;
 
     //  Tabla perfil (una sola fila con el dueño de la app)
     public static final String T_PERFIL = "perfil";
@@ -51,10 +51,23 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
     public static final String T_COMPRA = "compra";
     public static final String COMPRA_ID = "id";
     public static final String COMPRA_TITULO = "titulo";
-    public static final String COMPRA_MONTO = "monto";
+    public static final String COMPRA_MONTO_ESTIMADO = "monto_estimado";
+    public static final String COMPRA_MONTO_REAL = "monto_real";
     public static final String COMPRA_FECHA = "fecha";
     public static final String COMPRA_ESTADO = "estado";
     public static final String COMPRA_CONTACTO_ID = "contacto_id";
+    public static final String COMPRA_LUGAR = "lugar_nombre";
+    public static final String COMPRA_LAT = "lat";
+    public static final String COMPRA_LON = "lon";
+    public static final String COMPRA_TIENE_GEO = "tiene_geo";
+
+    // Tabla compra_producto
+    public static final String T_COMPRA_PRODUCTO = "compra_producto";
+    public static final String CPR_ID = "id";
+    public static final String CPR_COMPRA_ID = "compra_id";
+    public static final String CPR_NOMBRE = "nombre";
+    public static final String CPR_PRECIO_ESTIMADO = "precio_estimado";
+    public static final String CPR_PRECIO_REAL = "precio_real";
 
     // Tabla gasto_compartido
     public static final String T_GASTO = "gasto_compartido";
@@ -117,11 +130,24 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + T_COMPRA + " (" +
                 COMPRA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COMPRA_TITULO + " TEXT NOT NULL, " +
-                COMPRA_MONTO + " REAL NOT NULL DEFAULT 0, " +
+                COMPRA_MONTO_ESTIMADO + " REAL NOT NULL DEFAULT 0, " +
+                COMPRA_MONTO_REAL + " REAL NOT NULL DEFAULT 0, " +
                 COMPRA_FECHA + " TEXT, " +
                 COMPRA_ESTADO + " TEXT NOT NULL, " +
                 COMPRA_CONTACTO_ID + " INTEGER, " +
+                COMPRA_LUGAR + " TEXT, " +
+                COMPRA_LAT + " REAL, " +
+                COMPRA_LON + " REAL, " +
+                COMPRA_TIENE_GEO + " INTEGER NOT NULL DEFAULT 0, " +
                 "FOREIGN KEY(" + COMPRA_CONTACTO_ID + ") REFERENCES " + T_CONTACTO + "(" + CONTACTO_ID + "))");
+
+        db.execSQL("CREATE TABLE " + T_COMPRA_PRODUCTO + " (" +
+                CPR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CPR_COMPRA_ID + " INTEGER NOT NULL, " +
+                CPR_NOMBRE + " TEXT NOT NULL, " +
+                CPR_PRECIO_ESTIMADO + " REAL NOT NULL DEFAULT 0, " +
+                CPR_PRECIO_REAL + " REAL NOT NULL DEFAULT 0, " +
+                "FOREIGN KEY(" + CPR_COMPRA_ID + ") REFERENCES " + T_COMPRA + "(" + COMPRA_ID + "))");
 
         db.execSQL("CREATE TABLE " + T_GASTO + " (" +
                 GASTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -158,6 +184,7 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + T_GC_PARTICIPANTE);
         db.execSQL("DROP TABLE IF EXISTS " + T_GC_PRODUCTO);
         db.execSQL("DROP TABLE IF EXISTS " + T_GASTO);
+        db.execSQL("DROP TABLE IF EXISTS " + T_COMPRA_PRODUCTO);
         db.execSQL("DROP TABLE IF EXISTS " + T_COMPRA);
         db.execSQL("DROP TABLE IF EXISTS " + T_MOVIMIENTO);
         db.execSQL("DROP TABLE IF EXISTS " + T_CUENTA);

@@ -61,9 +61,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Módulo: compras e historial -->
         <activity
             android:name=".ComprasActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CompraDetalleActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".SelectorUbicacionActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
