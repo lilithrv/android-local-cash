@@ -50,6 +50,8 @@ public class SelectorUbicacionActivity extends BaseActivity {
     // false cuando viene del botón "Usar mi ubicación" (sí coloca marcador)
     private boolean centrarAlConceder = false;
 
+    private String nombreAuto = "";
+
     // Lanzador para pedir el permiso de ubicación en tiempo de ejecución
     private final ActivityResultLauncher<String> permisoUbicacion =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), concedido -> {
@@ -133,6 +135,55 @@ public class SelectorUbicacionActivity extends BaseActivity {
         marcador.setPosition(punto);
         map.getController().setCenter(punto);
         map.invalidate();
+        // Resolver el nombre del lugar a partir de las coordenadas (en segundo plano).
+        resolverNombre(punto);
+    }
+
+    // Geocodificación inversa: convierte coordenadas en un nombre de lugar y lo escribe en
+    // el campo de nombre. Solo rellena si está vacío o si tenía un nombre puesto automáticamente
+
+    private void resolverNombre(GeoPoint punto) {
+        new Thread(() -> {
+            String etiqueta = null;
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> resultados = geocoder.getFromLocation(
+                        punto.getLatitude(), punto.getLongitude(), 1);
+                if (resultados != null && !resultados.isEmpty()) {
+                    etiqueta = describir(resultados.get(0));
+                }
+            } catch (Exception e) {
+                etiqueta = null;
+            }
+            final String nombre = etiqueta;
+            if (nombre == null || nombre.isEmpty()) {
+                return;
+            }
+            runOnUiThread(() -> {
+                String actual = etNombre.getText().toString().trim();
+                if (actual.isEmpty() || actual.equals(nombreAuto)) {
+                    etNombre.setText(nombre);
+                    nombreAuto = nombre;
+                }
+            });
+        }).start();
+    }
+
+    // Construye un nombre legible y corto a partir de una dirección
+    private String describir(Address a) {
+        String principal = a.getFeatureName();
+        String via = a.getThoroughfare();
+        String ciudad = (a.getLocality() != null) ? a.getLocality() : a.getSubAdminArea();
+        if (principal == null || principal.matches("\\d+")) {
+            principal = (via != null) ? via : principal;
+        }
+        if (principal == null) {
+            return a.getAddressLine(0);
+        }
+        if (ciudad != null && !ciudad.equalsIgnoreCase(principal)) {
+            return principal + ", " + ciudad;
+        }
+        return principal;
     }
 
     // Al abrir para un lugar nuevo: intenta partir en la ubicación del usuario. Si aún no hay
