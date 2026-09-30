@@ -126,6 +126,38 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
+            <LinearLayout
+                android:id="@+id/barraPaginacionProd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btnPagAnteriorProd"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paginador_anterior" />
+
+                <TextView
+                    android:id="@+id/tvPaginaProd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/lc_hint" />
+
+                <Button
+                    android:id="@+id/btnPagSiguienteProd"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paginador_siguiente" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvTotalEstimado"
                 android:layout_width="match_parent"

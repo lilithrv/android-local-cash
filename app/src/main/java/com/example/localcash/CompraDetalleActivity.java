@@ -28,6 +28,7 @@ import com.example.localcash.modelo.Compra;
 import com.example.localcash.modelo.CompraProducto;
 import com.example.localcash.modelo.Contacto;
 import com.example.localcash.util.Formato;
+import com.example.localcash.util.Paginador;
 import com.example.localcash.util.Validaciones;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +47,11 @@ public class CompraDetalleActivity extends BaseActivity
     LinearLayout bloqueReal;
     RecyclerView rvProductos;
 
+    // Paginación del carrito
+    LinearLayout barraPaginacionProd;
+    Button btnPagAnteriorProd, btnPagSiguienteProd;
+    TextView tvPaginaProd;
+
     CompraRepositorio compraRepositorio;
     ContactoRepositorio contactoRepositorio;
 
@@ -54,11 +60,13 @@ public class CompraDetalleActivity extends BaseActivity
 
     // Productos del carrito (en memoria hasta guardar)
     ArrayList<CompraProducto> productos = new ArrayList<>();
+    ArrayList<CompraProducto> todosProductos = new ArrayList<>();
     CompraProductoAdapter productoAdapter;
+    final Paginador<CompraProducto> paginadorProd = new Paginador<>();
 
     ArrayList<Contacto> contactos = new ArrayList<>();
 
-    // Estado del lugar elegido.
+    // Estado del lugar elegido
     String lugarNombre = "";
     double lugarLat = 0, lugarLon = 0;
     boolean lugarTieneGeo = false;
@@ -112,6 +120,13 @@ public class CompraDetalleActivity extends BaseActivity
         rvProductos.setLayoutManager(new LinearLayoutManager(this));
         rvProductos.setAdapter(productoAdapter);
 
+        barraPaginacionProd = findViewById(R.id.barraPaginacionProd);
+        btnPagAnteriorProd = findViewById(R.id.btnPagAnteriorProd);
+        btnPagSiguienteProd = findViewById(R.id.btnPagSiguienteProd);
+        tvPaginaProd = findViewById(R.id.tvPaginaProd);
+        btnPagAnteriorProd.setOnClickListener(v -> { paginadorProd.anterior(); mostrarPaginaProductos(); });
+        btnPagSiguienteProd.setOnClickListener(v -> { paginadorProd.siguiente(); mostrarPaginaProductos(); });
+
         cargarContactos();
 
         btnAgregarProducto.setOnClickListener(v -> agregarProducto());
@@ -160,9 +175,9 @@ public class CompraDetalleActivity extends BaseActivity
         lugarLon = compra.getLon();
         lugarTieneGeo = compra.isTieneGeo();
 
-        productos.clear();
-        productos.addAll(compraRepositorio.listarProductos(editandoId));
-        productoAdapter.notifyDataSetChanged();
+        todosProductos.clear();
+        todosProductos.addAll(compraRepositorio.listarProductos(editandoId));
+        refrescarProductos();
 
         if (!compra.esAgendada() && compra.getMontoReal() > 0) {
             etTotalReal.setText(String.format(Formato.CL, "%.0f", compra.getMontoReal()));
@@ -192,8 +207,9 @@ public class CompraDetalleActivity extends BaseActivity
             return;
         }
         String nombre = etProductoNombre.getText().toString().trim();
-        productos.add(new CompraProducto(0, editandoId, nombre, precio, 0));
-        productoAdapter.notifyDataSetChanged();
+        todosProductos.add(new CompraProducto(0, editandoId, nombre, precio, 0));
+        refrescarProductos();
+        irAUltimaPaginaProd();  // mostrar el producto recién agregado
         etProductoNombre.setText("");
         etProductoPrecio.setText("");
         etProductoNombre.requestFocus();
@@ -203,10 +219,35 @@ public class CompraDetalleActivity extends BaseActivity
     @Override
     public void onQuitar(int posicion) {
         if (posicion >= 0 && posicion < productos.size()) {
-            productos.remove(posicion);
-            productoAdapter.notifyDataSetChanged();
+            todosProductos.remove(productos.get(posicion));
+            refrescarProductos();
             actualizarTotalEstimado();
         }
+    }
+
+    // Recalcula las páginas del carrito y refresca la vista
+    private void refrescarProductos() {
+        paginadorProd.setDatos(todosProductos);
+        mostrarPaginaProductos();
+    }
+
+    private void mostrarPaginaProductos() {
+        productos.clear();
+        productos.addAll(paginadorProd.paginaActual());
+        productoAdapter.notifyDataSetChanged();
+        boolean varias = paginadorProd.totalPaginas() > 1;
+        barraPaginacionProd.setVisibility(varias ? View.VISIBLE : View.GONE);
+        tvPaginaProd.setText(getString(R.string.paginador_pagina,
+                paginadorProd.paginaHumana(), paginadorProd.totalPaginas()));
+        btnPagAnteriorProd.setEnabled(paginadorProd.hayAnterior());
+        btnPagSiguienteProd.setEnabled(paginadorProd.haySiguiente());
+    }
+
+    private void irAUltimaPaginaProd() {
+        while (paginadorProd.haySiguiente()) {
+            paginadorProd.siguiente();
+        }
+        mostrarPaginaProductos();
     }
 
     @Override
@@ -217,7 +258,7 @@ public class CompraDetalleActivity extends BaseActivity
 
     private double sumaEstimados() {
         double total = 0;
-        for (CompraProducto p : productos) {
+        for (CompraProducto p : todosProductos) {
             total += p.getPrecioEstimado();
         }
         return total;
@@ -225,7 +266,7 @@ public class CompraDetalleActivity extends BaseActivity
 
     private double sumaReales() {
         double total = 0;
-        for (CompraProducto p : productos) {
+        for (CompraProducto p : todosProductos) {
             total += p.getPrecioReal();
         }
         return total;
@@ -240,6 +281,13 @@ public class CompraDetalleActivity extends BaseActivity
     private void aplicarModoReal() {
         boolean realizada = rgEstado.getCheckedRadioButtonId() == R.id.rbRealizada;
         bloqueReal.setVisibility(realizada ? View.VISIBLE : View.GONE);
+        if (realizada) {
+            for (CompraProducto p : todosProductos) {
+                if (p.getPrecioReal() <= 0) {
+                    p.setPrecioReal(p.getPrecioEstimado());
+                }
+            }
+        }
         productoAdapter.setModoReal(realizada);
         if (realizada && etTotalReal.getText().toString().trim().isEmpty()) {
             etTotalReal.setText(String.format(Formato.CL, "%.0f", sumaReales()));
@@ -274,7 +322,7 @@ public class CompraDetalleActivity extends BaseActivity
             etTitulo.setError(getString(R.string.acp_error_titulo));
             return;
         }
-        if (productos.isEmpty()) {
+        if (todosProductos.isEmpty()) {
             Toast.makeText(this, R.string.acp_falta_producto, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -302,7 +350,7 @@ public class CompraDetalleActivity extends BaseActivity
         }
 
         // Regrabar el carrito. El precio real solo tiene sentido si la compra se realizó
-        for (CompraProducto p : productos) {
+        for (CompraProducto p : todosProductos) {
             double real = realizada ? p.getPrecioReal() : 0;
             compraRepositorio.agregarProducto(compraId, p.getNombre(), p.getPrecioEstimado(), real);
         }

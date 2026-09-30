@@ -126,7 +126,7 @@
     <string name="acp_detalle_editar">Editar compra</string>
     <string name="acp_estado">Estado</string>
     <string name="acp_productos">Productos del carrito</string>
-    <string name="acp_prod_nombre">Producto)</string>
+    <string name="acp_prod_nombre">Producto</string>
     <string name="acp_prod_precio">Precio</string>
     <string name="acp_btnprod">Agregar producto</string>
     <string name="acp_quitar">Quitar</string>
