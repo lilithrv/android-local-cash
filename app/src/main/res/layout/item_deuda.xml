@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/lc_text"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etMonto"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/ade_monto"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:textColor="@color/lc_text"
+        android:textColorHint="@color/lc_hint" />
+
+    <CheckBox
+        android:id="@+id/cbPagado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/ade_pagado"
+        android:textColor="@color/lc_hint" />
+
+    <Button
+        android:id="@+id/btnQuitar"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingHorizontal="10dp"
+        android:text="@string/ade_quitar" />
+
+</LinearLayout>
