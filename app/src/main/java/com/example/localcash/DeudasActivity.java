@@ -265,7 +265,7 @@ public class DeudasActivity extends BaseActivity {
             gastoRepositorio.actualizarParticipante(participantes.get(i).getId(), monto, pagado);
         }
         Toast.makeText(this, R.string.ade_guardado, Toast.LENGTH_SHORT).show();
-        cargarParticipantes();
+        finish(); // vuelve a GastoCompartidoActivity (pantalla anterior)
     }
 
     // Muestra la suma asignada a los participantes, la parte del dueño y si cuadra con el total
