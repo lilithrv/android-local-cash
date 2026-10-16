@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.localcash.modelo.Perfil;
+import com.example.localcash.util.SeguridadPin;
 
 // Acceso a la tabla perfil
 public class PerfilRepositorio {
@@ -28,11 +29,12 @@ public class PerfilRepositorio {
     }
 
     // Crear perfil local en el primer uso. Devuelve el id generado.
+    // el PIN se hashea para no guardarlo en texto plano
     public long crearPerfil(String nombre, String pinRespaldo, boolean biometriaActiva) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues valores = new ContentValues();
         valores.put(LocalCashDBHelper.PERFIL_NOMBRE, nombre);
-        valores.put(LocalCashDBHelper.PERFIL_PIN, pinRespaldo);
+        valores.put(LocalCashDBHelper.PERFIL_PIN, SeguridadPin.hash(pinRespaldo));
         valores.put(LocalCashDBHelper.PERFIL_BIOMETRIA, biometriaActiva ? 1 : 0);
         return db.insert(LocalCashDBHelper.T_PERFIL, null, valores);
     }
@@ -57,7 +59,19 @@ public class PerfilRepositorio {
     // Validar PIN respaldo (cuando la biometría no está disponible)
     public boolean validarPin(String pin) {
         Perfil perfil = obtenerPerfil();
-        return perfil != null && perfil.getPinRespaldo() != null
-                && perfil.getPinRespaldo().equals(pin);
+        return perfil != null && SeguridadPin.verificar(pin, perfil.getPinRespaldo());
+    }
+
+    // Reinicia SOLO el PIN de respaldo (se guarda su hash), sin tocar el resto de los datos.
+    public void reiniciarPin(String nuevoPin) {
+        Perfil perfil = obtenerPerfil();
+        if (perfil == null) {
+            return;
+        }
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put(LocalCashDBHelper.PERFIL_PIN, SeguridadPin.hash(nuevoPin));
+        db.update(LocalCashDBHelper.T_PERFIL, valores,
+                LocalCashDBHelper.PERFIL_ID + " = ?", new String[]{String.valueOf(perfil.getId())});
     }
 }
