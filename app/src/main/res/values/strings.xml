@@ -42,6 +42,12 @@
     <string name="ah_btncompras">Compras e historial</string>
     <string name="ah_btngastos">Gastos compartidos</string>
     <string name="ah_btncontactos">Contactos</string>
+    <string name="ah_btnreiniciarpin">Reiniciar PIN</string>
+    <string name="ah_reiniciarpin_titulo">Reiniciar PIN</string>
+    <string name="ah_reiniciarpin_hint">Nuevo PIN (mín. 4 dígitos)</string>
+    <string name="ah_reiniciarpin_ok">Guardar</string>
+    <string name="ah_reiniciarpin_error">El PIN debe tener al menos 4 dígitos</string>
+    <string name="ah_reiniciarpin_hecho">PIN actualizado</string>
 
     <!-- Contactos (acon_) -->
     <string name="acon_titulo">Agenda de contactos</string>

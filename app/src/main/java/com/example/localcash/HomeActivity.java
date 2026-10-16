@@ -2,10 +2,14 @@ package com.example.localcash;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,6 +25,7 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView tvSaludo, tvSaldoTotal;
     Button btnCuentas, btnMovimientos, btnMapa, btnCompras, btnGastosCompartidos, btnContactos;
+    Button btnReiniciarPin;
 
     CuentaRepositorio cuentaRepositorio;
     PerfilRepositorio perfilRepositorio;
@@ -44,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         btnCompras = findViewById(R.id.btnCompras);
         btnGastosCompartidos = findViewById(R.id.btnGastosCompartidos);
         btnContactos = findViewById(R.id.btnContactos);
+        btnReiniciarPin = findViewById(R.id.btnReiniciarPin);
 
         cuentaRepositorio = new CuentaRepositorio(this);
         perfilRepositorio = new PerfilRepositorio(this);
@@ -54,6 +60,29 @@ public class HomeActivity extends AppCompatActivity {
         btnCompras.setOnClickListener(v -> abrir(ComprasActivity.class));
         btnGastosCompartidos.setOnClickListener(v -> abrir(GastoCompartidoActivity.class));
         btnContactos.setOnClickListener(v -> abrir(ContactosActivity.class));
+        btnReiniciarPin.setOnClickListener(v -> dialogReiniciarPin());
+    }
+
+    // Pide un PIN nuevo y lo guarda hasheado. Solo cambia el PIN; el resto de los datos queda igual.
+    private void dialogReiniciarPin() {
+        EditText etPin = new EditText(this);
+        etPin.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        etPin.setHint(R.string.ah_reiniciarpin_hint);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.ah_reiniciarpin_titulo)
+                .setView(etPin)
+                .setPositiveButton(R.string.ah_reiniciarpin_ok, (dialog, which) -> {
+                    String nuevoPin = etPin.getText().toString().trim();
+                    if (nuevoPin.length() < 4) {
+                        Toast.makeText(this, R.string.ah_reiniciarpin_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    perfilRepositorio.reiniciarPin(nuevoPin);
+                    Toast.makeText(this, R.string.ah_reiniciarpin_hecho, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(R.string.al_pin_cancelar, null)
+                .show();
     }
 
     @Override
