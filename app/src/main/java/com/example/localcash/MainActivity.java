@@ -2,6 +2,7 @@ package com.example.localcash;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private void pedirPin() {
         EditText etPin = new EditText(this);
         etPin.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        etPin.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
         etPin.setHint(R.string.al_pin_hint);
 
         new AlertDialog.Builder(this)

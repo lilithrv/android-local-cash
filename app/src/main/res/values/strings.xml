@@ -22,10 +22,10 @@
     <string name="as_titulo">Crear perfil local</string>
     <string name="as_subtitulo">Tus datos se guardan solo en este dispositivo</string>
     <string name="as_etnombre">Tu nombre</string>
-    <string name="as_etpin">PIN de respaldo (mínimo 4 dígitos)</string>
+    <string name="as_etpin">PIN de respaldo (4 a 6 dígitos)</string>
     <string name="as_btncrear">Crear perfil</string>
     <string name="as_error_nombre">Ingrese su nombre</string>
-    <string name="as_error_pin">El PIN debe tener al menos 4 dígitos</string>
+    <string name="as_error_pin">El PIN debe tener entre 4 y 6 dígitos</string>
     <string name="as_perfil_creado">Perfil creado. Ahora desbloquea con tu huella</string>
 
     <!-- Home / Panel (ah_) -->
@@ -44,9 +44,9 @@
     <string name="ah_btncontactos">Contactos</string>
     <string name="ah_btnreiniciarpin">Reiniciar PIN</string>
     <string name="ah_reiniciarpin_titulo">Reiniciar PIN</string>
-    <string name="ah_reiniciarpin_hint">Nuevo PIN (mín. 4 dígitos)</string>
+    <string name="ah_reiniciarpin_hint">Nuevo PIN (4 a 6 dígitos)</string>
     <string name="ah_reiniciarpin_ok">Guardar</string>
-    <string name="ah_reiniciarpin_error">El PIN debe tener al menos 4 dígitos</string>
+    <string name="ah_reiniciarpin_error">El PIN debe tener entre 4 y 6 dígitos</string>
     <string name="ah_reiniciarpin_hecho">PIN actualizado</string>
 
     <!-- Contactos (acon_) -->

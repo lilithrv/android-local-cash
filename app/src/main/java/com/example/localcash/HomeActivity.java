@@ -2,6 +2,7 @@ package com.example.localcash;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,6 +68,7 @@ public class HomeActivity extends AppCompatActivity {
     private void dialogReiniciarPin() {
         EditText etPin = new EditText(this);
         etPin.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        etPin.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
         etPin.setHint(R.string.ah_reiniciarpin_hint);
 
         new AlertDialog.Builder(this)
@@ -74,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
                 .setView(etPin)
                 .setPositiveButton(R.string.ah_reiniciarpin_ok, (dialog, which) -> {
                     String nuevoPin = etPin.getText().toString().trim();
-                    if (nuevoPin.length() < 4) {
+                    if (nuevoPin.length() < 4 || nuevoPin.length() > 6) {
                         Toast.makeText(this, R.string.ah_reiniciarpin_error, Toast.LENGTH_SHORT).show();
                         return;
                     }

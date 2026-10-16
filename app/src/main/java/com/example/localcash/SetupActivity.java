@@ -45,7 +45,7 @@ public class SetupActivity extends AppCompatActivity {
                 return;
             }
             String pin = etPin.getText().toString().trim();
-            if (pin.length() < 4) {
+            if (pin.length() < 4 || pin.length() > 6) {
                 etPin.setError(getString(R.string.as_error_pin));
                 return;
             }

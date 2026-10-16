@@ -55,6 +55,7 @@
                 android:layout_marginTop="12dp"
                 android:hint="@string/as_etpin"
                 android:inputType="numberPassword"
+                android:maxLength="6"
                 android:minHeight="48dp"
                 android:textColor="@color/lc_text"
                 android:textColorHint="@color/lc_hint" />
