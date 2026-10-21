@@ -16,20 +16,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.example.localcash.util.UbicacionHelper;
 
-import org.osmdroid.config.Configuration;
-import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 import java.util.Locale;
 
 // Permite fijar el lugar de una compra de tres formas: tocando el mapa, con el GPS,
 // o buscando por nombre (geocodificación best-effort). Devuelve lat/lon/nombre
-public class SelectorUbicacionActivity extends BaseActivity {
+public class SelectorUbicacionActivity extends BaseActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_NOMBRE = "NOMBRE";
     public static final String EXTRA_LAT = "LAT";
@@ -37,9 +37,9 @@ public class SelectorUbicacionActivity extends BaseActivity {
     public static final String EXTRA_TIENE_GEO = "TIENE_GEO";
 
     // Centro por defecto (Santiago de Chile) cuando no llega un lugar previo
-    private static final GeoPoint CENTRO_DEFECTO = new GeoPoint(-33.4489, -70.6693);
+    private static final LatLng CENTRO_DEFECTO = new LatLng(-33.4489, -70.6693);
 
-    MapView map;
+    GoogleMap map;
     EditText etNombre;
     Button btnBuscar, btnUsarUbicacion, btnGuardar;
 
@@ -72,45 +72,45 @@ public class SelectorUbicacionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Configuration.getInstance().setUserAgentValue("Mapa / (lelsiev@gmail.com)");
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_selector_ubicacion);
         configurarBarra(getString(R.string.asu_titulo));
 
-        map = findViewById(R.id.map);
         etNombre = findViewById(R.id.etNombre);
         btnBuscar = findViewById(R.id.btnBuscar);
         btnUsarUbicacion = findViewById(R.id.btnUsarUbicacion);
         btnGuardar = findViewById(R.id.btnGuardar);
-
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setMultiTouchControls(true);
-        map.getController().setZoom(15.0);
-
-        // Overlay que recibe los toques sobre el mapa
-        MapEventsOverlay eventos = new MapEventsOverlay(new MapEventsReceiver() {
-            @Override
-            public boolean singleTapConfirmedHelper(GeoPoint p) {
-                ponerMarcador(p);
-                return true;
-            }
-
-            @Override
-            public boolean longPressHelper(GeoPoint p) {
-                return false;
-            }
-        });
-        map.getOverlays().add(eventos);
 
         // Lugar previo recibido (al reabrir para ajustar)
         String nombrePrevio = getIntent().getStringExtra(EXTRA_NOMBRE);
         if (nombrePrevio != null) {
             etNombre.setText(nombrePrevio);
         }
+
+        btnBuscar.setOnClickListener(v -> buscarPorNombre());
+        btnUsarUbicacion.setOnClickListener(v -> pedirUbicacion());
+        btnGuardar.setOnClickListener(v -> guardarLugar());
+
+        // El mapa se entrega de forma asíncrona: la configuración inicial va en onMapReady.
+        SupportMapFragment fragmentMapa =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        if (fragmentMapa != null) {
+            fragmentMapa.getMapAsync(this);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.getUiSettings().setZoomControlsEnabled(true);
+
+        // Toque sobre el mapa: fija (o mueve) el marcador
+        map.setOnMapClickListener(this::ponerMarcador);
+
         boolean tieneGeo = getIntent().getBooleanExtra(EXTRA_TIENE_GEO, false);
         if (tieneGeo) {
             // Ya había un lugar elegido: reabrir sobre ese punto
-            GeoPoint previo = new GeoPoint(
+            LatLng previo = new LatLng(
                     getIntent().getDoubleExtra(EXTRA_LAT, 0),
                     getIntent().getDoubleExtra(EXTRA_LON, 0));
             ponerMarcador(previo);
@@ -119,22 +119,19 @@ public class SelectorUbicacionActivity extends BaseActivity {
             // si no hay permiso/ubicación, usar Santiago como respaldo
             centrarEnUbicacionInicial();
         }
-
-        btnBuscar.setOnClickListener(v -> buscarPorNombre());
-        btnUsarUbicacion.setOnClickListener(v -> pedirUbicacion());
-        btnGuardar.setOnClickListener(v -> guardarLugar());
     }
 
     // Coloca (o mueve) el marcador y centra el mapa en ese punto
-    private void ponerMarcador(GeoPoint punto) {
-        if (marcador == null) {
-            marcador = new Marker(map);
-            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            map.getOverlays().add(marcador);
+    private void ponerMarcador(LatLng punto) {
+        if (map == null) {
+            return;
         }
-        marcador.setPosition(punto);
-        map.getController().setCenter(punto);
-        map.invalidate();
+        if (marcador == null) {
+            marcador = map.addMarker(new MarkerOptions().position(punto));
+        } else {
+            marcador.setPosition(punto);
+        }
+        map.animateCamera(CameraUpdateFactory.newLatLng(punto));
         // Resolver el nombre del lugar a partir de las coordenadas (en segundo plano).
         resolverNombre(punto);
     }
@@ -142,13 +139,13 @@ public class SelectorUbicacionActivity extends BaseActivity {
     // Geocodificación inversa: convierte coordenadas en un nombre de lugar y lo escribe en
     // el campo de nombre. Solo rellena si está vacío o si tenía un nombre puesto automáticamente
 
-    private void resolverNombre(GeoPoint punto) {
+    private void resolverNombre(LatLng punto) {
         new Thread(() -> {
             String etiqueta = null;
             try {
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
                 List<Address> resultados = geocoder.getFromLocation(
-                        punto.getLatitude(), punto.getLongitude(), 1);
+                        punto.latitude, punto.longitude, 1);
                 if (resultados != null && !resultados.isEmpty()) {
                     etiqueta = describir(resultados.get(0));
                 }
@@ -189,7 +186,7 @@ public class SelectorUbicacionActivity extends BaseActivity {
     // Al abrir para un lugar nuevo: intenta partir en la ubicación del usuario. Si aún no hay
     // permiso, lo pide de entrada; mientras tanto centra en Santiago como respaldo
     private void centrarEnUbicacionInicial() {
-        map.getController().setCenter(CENTRO_DEFECTO);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(CENTRO_DEFECTO, 15f));
         if (UbicacionHelper.tienePermiso(this)) {
             centrarEnUbicacionActual();
         } else {
@@ -200,9 +197,13 @@ public class SelectorUbicacionActivity extends BaseActivity {
 
     // Centra el mapa en la última ubicación conocida (sin colocar marcador).
     private void centrarEnUbicacionActual() {
+        if (map == null) {
+            return;
+        }
         Location ubicacion = UbicacionHelper.ultimaUbicacion(this);
         if (ubicacion != null) {
-            map.getController().setCenter(new GeoPoint(ubicacion.getLatitude(), ubicacion.getLongitude()));
+            map.animateCamera(CameraUpdateFactory.newLatLng(
+                    new LatLng(ubicacion.getLatitude(), ubicacion.getLongitude())));
         }
     }
 
@@ -219,7 +220,7 @@ public class SelectorUbicacionActivity extends BaseActivity {
     private void usarUbicacionActual() {
         Location ubicacion = UbicacionHelper.ultimaUbicacion(this);
         if (ubicacion != null) {
-            ponerMarcador(new GeoPoint(ubicacion.getLatitude(), ubicacion.getLongitude()));
+            ponerMarcador(new LatLng(ubicacion.getLatitude(), ubicacion.getLongitude()));
         } else {
             Toast.makeText(this, R.string.asu_sin_ubicacion, Toast.LENGTH_LONG).show();
         }
@@ -235,19 +236,19 @@ public class SelectorUbicacionActivity extends BaseActivity {
         Toast.makeText(this, R.string.asu_buscando, Toast.LENGTH_SHORT).show();
 
         new Thread(() -> {
-            GeoPoint encontrado = null;
+            LatLng encontrado = null;
             try {
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
                 List<Address> resultados = geocoder.getFromLocationName(texto, 1);
                 if (resultados != null && !resultados.isEmpty()) {
                     Address a = resultados.get(0);
-                    encontrado = new GeoPoint(a.getLatitude(), a.getLongitude());
+                    encontrado = new LatLng(a.getLatitude(), a.getLongitude());
                 }
             } catch (Exception e) {
                 // Sin red o sin servicio de geocodificación,  nombre queda como etiqueta manual
                 encontrado = null;
             }
-            final GeoPoint resultado = encontrado;
+            final LatLng resultado = encontrado;
             runOnUiThread(() -> {
                 if (resultado != null) {
                     ponerMarcador(resultado);
@@ -271,22 +272,10 @@ public class SelectorUbicacionActivity extends BaseActivity {
         datos.putExtra(EXTRA_NOMBRE, nombre);
         datos.putExtra(EXTRA_TIENE_GEO, tieneGeo);
         if (tieneGeo) {
-            datos.putExtra(EXTRA_LAT, marcador.getPosition().getLatitude());
-            datos.putExtra(EXTRA_LON, marcador.getPosition().getLongitude());
+            datos.putExtra(EXTRA_LAT, marcador.getPosition().latitude);
+            datos.putExtra(EXTRA_LON, marcador.getPosition().longitude);
         }
         setResult(RESULT_OK, datos);
         finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        map.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        map.onPause();
     }
 }
