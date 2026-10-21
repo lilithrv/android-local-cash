@@ -1,4 +1,4 @@
-package com.example.localcash.datos;
+package com.example.localcash.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,5 +1,7 @@
 package com.example.localcash.datos;
 
+import com.example.localcash.database.LocalCashDBHelper;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
