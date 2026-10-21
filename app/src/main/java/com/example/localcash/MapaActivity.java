@@ -5,12 +5,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.core.content.ContextCompat;
 
 import com.example.localcash.datos.CompraRepositorio;
 import com.example.localcash.datos.MovimientoRepositorio;
 import com.example.localcash.modelo.Compra;
 import com.example.localcash.modelo.Movimiento;
 import com.example.localcash.util.Formato;
+import com.example.localcash.util.PinMapa;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,18 +66,27 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
         LatLng primero = null;
 
+        int colorIngreso = ContextCompat.getColor(this, R.color.lc_ingreso);
+        int colorEgreso = ContextCompat.getColor(this, R.color.lc_egreso);
+        int colorCompra = ContextCompat.getColor(this, R.color.lc_compra);
+
         // Marcadores de movimientos (ingresos/egresos)
         for (Movimiento mov : movConGeo) {
             LatLng punto = new LatLng(mov.getLat(), mov.getLon());
             if (primero == null) {
                 primero = punto;
             }
-            String signo = mov.esIngreso() ? "+" : "-";
+            boolean ingreso = mov.esIngreso();
+            String signo = ingreso ? "+" : "-";
             map.addMarker(new MarkerOptions()
                     .position(punto)
+                    .anchor(0.5f, 1f)
                     .title(mov.getDescripcion())
                     .snippet(String.format(Formato.CL, "%s$%,.0f  ·  %s",
-                            signo, mov.getMonto(), mov.getFecha())));
+                            signo, mov.getMonto(), mov.getFecha()))
+                    .icon(PinMapa.pin(this,
+                            ingreso ? R.drawable.ic_pin_ingreso : R.drawable.ic_pin_egreso,
+                            ingreso ? colorIngreso : colorEgreso)));
         }
 
         // Marcadores de compras con ubicación (realizadas y agendadas)
@@ -87,9 +98,11 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             String estado = compra.esAgendada() ? "Agendada" : "Realizada";
             map.addMarker(new MarkerOptions()
                     .position(punto)
-                    .title("🛒 " + compra.getTitulo())
+                    .anchor(0.5f, 1f)
+                    .title(compra.getTitulo())
                     .snippet(String.format(Formato.CL, "%s  ·  $%,.0f  ·  %s",
-                            estado, compra.getMontoVigente(), compra.getFecha())));
+                            estado, compra.getMontoVigente(), compra.getFecha()))
+                    .icon(PinMapa.pin(this, R.drawable.ic_pin_compra, colorCompra)));
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(

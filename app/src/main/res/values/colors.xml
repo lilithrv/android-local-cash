@@ -12,4 +12,5 @@
     <color name="lc_on_primary">#04120C</color>
     <color name="lc_ingreso">#22C55E</color>
     <color name="lc_egreso">#F26D6D</color>
+    <color name="lc_compra">#2C9BD6</color>
 </resources>
