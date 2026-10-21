@@ -56,7 +56,7 @@ public final class PinMapa {
 
     private static void dibujarGota(Canvas lienzo, float cx, float cy, float radio,
                                     float puntaY, Paint pintura) {
-        float dist = puntaY - cy; 
+        float dist = puntaY - cy;
         if (dist > radio) {
             float tangente = (float) Math.sqrt(dist * dist - radio * radio);
             float tx = radio * tangente / dist;

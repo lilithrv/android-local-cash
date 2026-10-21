@@ -18,7 +18,7 @@ biométrica (huella) y un PIN de respaldo. Todos los datos se guardan localmente
 **Módulo 2 - Cuentas y movimientos**
 - Cuentas financieras (Efectivo / Ahorro / Tarjeta / Otro) con saldo calculado (saldo inicial + ingresos − egresos).
 - Movimientos de ingreso/egreso por cuenta, con geolocalización opcional.
-- Mapa (osmdroid) con un marcador por cada movimiento geolocalizado.
+- Mapa (Google Maps) con un marcador por cada movimiento geolocalizado.
 
 **Módulo 3 - Compras e historial**
 - Registro de compras realizadas o agendadas (futuras), con un carrito de productos.
@@ -59,7 +59,7 @@ localcash/
     │   ├── ContactosActivity.java       # Agenda local
     │   ├── CuentasActivity.java         # Cuentas con saldo
     │   ├── MovimientosActivity.java     # Ingresos/egresos + geolocalización
-    │   ├── MapaActivity.java            # Mapa osmdroid con marcadores
+    │   ├── MapaActivity.java            # Mapa Google Maps con marcadores
     │   ├── ComprasActivity.java         # Historial y compras agendadas
     │   ├── CompraDetalleActivity.java   # Añadir/edición de compra: carrito + lugar + monto real
     │   ├── SelectorUbicacionActivity.java # Elegir lugar en el mapa (tocar / GPS / buscar)
@@ -73,6 +73,7 @@ localcash/
     └── res/
         ├── layout/   # activity_*.xml, item_*.xml
         └── values/   # strings.xml, arrays.xml, colors.xml, themes.xml
+        └── drawable/ # pines
 ```
 
 **Separación de responsabilidades**
@@ -113,8 +114,10 @@ Archivo `localcash.db`, definido en `datos/LocalCashDBHelper.java`. Claves forá
 ## 5. Instalación y ejecución
 
 1. Abrir la carpeta `localcash/` en **Android Studio**.
-2. Esperar la **sincronización de Gradle** (descarga de dependencias, incluida osmdroid).
-3. Ejecutar con **Run ▶** en un emulador o dispositivo con **Android 8.0 (API 26) o superior**.
+2. Agregar la **API key de Google Maps** en `localcash/local.properties`:
+   `MAPS_API_KEY=TU_CLAVE` (obtenida en Google Cloud Console con "Maps SDK for Android" habilitado).
+3. Esperar la **sincronización de Gradle** (descarga de dependencias, incluida play-services-maps).
+4. Ejecutar con **Run ▶** en un emulador o dispositivo con **Android 8.0 (API 26) o superior**.
 
 ---
 
