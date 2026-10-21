@@ -5,13 +5,11 @@
     <!-- Biometría -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
-    <!-- Mapas (osmdroid) y geolocalización de movimientos -->
+    <!-- Mapas (Google Maps) y geolocalización de movimientos -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29" />
 
     <application
         android:allowBackup="false"
@@ -22,6 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LocalCash">
+
+        <!-- API key de Google Maps (se inyecta desde local.properties) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <!-- acceso y contactos -->
         <activity
