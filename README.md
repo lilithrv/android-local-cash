@@ -11,7 +11,7 @@ biométrica (huella) y un PIN de respaldo. Todos los datos se guardan localmente
 ## 1. Funcionalidades por módulo
 
 **Módulo 1 - Acceso y contactos**
-- Primer uso: creación de un perfil local (nombre + PIN de respaldo).
+- Primer uso: creación de un perfil local (nombre + PIN de respaldo). El PIN no se guarda en texto plano, sino como hash PBKDF2 con sal (`SeguridadPin`).
 - Acceso con BiometricPrompt (huella); si no hay huella registrada o el usuario lo prefiere, valida el PIN.
 - Agenda de contactos local (añadir, listar, borrar).
 
@@ -24,12 +24,14 @@ biométrica (huella) y un PIN de respaldo. Todos los datos se guardan localmente
 - Registro de compras realizadas o agendadas (futuras), con un carrito de productos.
 - Monto estimado (suma de productos) y, al marcarla realizada, monto real editable.
 - Lugar opcional elegido en el mapa (tocar, GPS o búsqueda por nombre) y enlace opcional a un contacto.
+- Al marcarla realizada puede pagarse desde una cuenta: genera automáticamente un egreso por el monto real, que hereda la ubicación de la compra (figura en el mapa) y descuenta el saldo. Si la compra vuelve a pendiente o se borra, el egreso se elimina.
 - Listas con paginación reutilizable.
 
 **Módulo 4 - Gastos compartidos y deudas**
 - Creación de una compra grupal agregando productos/servicios.
 - Selección de participantes de la agenda.
 - Reparto equitativo o personalizado del total, con saldos pendientes y marca de pagado.
+- Puede pagarse desde una cuenta: el dueño registra un egreso por el total adelantado y, cuando cada participante marca su parte como pagada (reembolso), se registra un ingreso en esa cuenta.
 
 ---
 
@@ -67,45 +69,52 @@ localcash/
     │   ├── DeudasActivity.java          # Reparto y saldos por participante
     │   ├── modelo/   # Perfil, Contacto, Cuenta, Movimiento, Compra, CompraProducto,
     │   │             # GastoCompartido, GcProducto, GcParticipante
-    │   ├── datos/    # LocalCashDBHelper + repositorio (acceso a DB)
+    │   ├── database/ # LocalCashDBHelper (creación/actualización del esquema SQLite)
+    │   ├── datos/    # Repositorios de acceso a la DB (Perfil, Contacto, Cuenta,
+    │   │             # Movimiento, Compra, GastoCompartido)
     │   ├── adapter/  # Contacto, Cuenta, Movimiento, Compra, CompraProducto, Producto, Gasto
-    │   └── util/     # Validaciones, BiometriaHelper, UbicacionHelper, Formato, Paginador
+    │   └── util/     # Validaciones, BiometriaHelper, SeguridadPin, UbicacionHelper,
+    │                 # Formato, Paginador, PinMapa
     └── res/
         ├── layout/   # activity_*.xml, item_*.xml
         └── values/   # strings.xml, arrays.xml, colors.xml, themes.xml
-        └── drawable/ # pines
+        └── drawable/ # iconografía (los pines del mapa se dibujan por código en PinMapa)
 ```
 
 **Separación de responsabilidades**
 - **UI:** `res/layout/` define las vistas; las *Activities* las controlan.
 - **Modelo:** clases en `modelo/`.
-- **Datos:** `datos/` centraliza el acceso a SQLite mediante `LocalCashDBHelper` y repositorios de acceso a la base de datos.
+- **Datos:** `database/LocalCashDBHelper` crea y mantiene el esquema SQLite; los repositorios de
+  `datos/` centralizan el acceso a la base de datos.
 - **Reutilización:** `BaseActivity` (toolbar + "volver"), `Validaciones` (formularios),
-  `BiometriaHelper` (BiometricPrompt), `UbicacionHelper` (ubicación), `Formato` (locale es-CL
-  para los montos), `Paginador` (paginación genérica de listas), y un *Adapter* por lista.
+  `BiometriaHelper` (BiometricPrompt), `SeguridadPin` (hash PBKDF2 del PIN de respaldo),
+  `UbicacionHelper` (ubicación), `Formato` (locale es-CL para los montos), `Paginador`
+  (paginación genérica de listas), `PinMapa` (íconos de los marcadores del mapa) y un *Adapter* por lista.
 
 ---
 
 ## 4. Base de datos local (SQLite)
 
-Archivo `localcash.db`, definido en `datos/LocalCashDBHelper.java`. Claves foráneas activadas.
+Archivo `localcash.db`, definido en `database/LocalCashDBHelper.java`. Claves foráneas activadas.
 
 | Tabla | Campos | Relación |
 |-------|--------|----------|
-| `perfil` | id, nombre, pin_respaldo, biometria_activa | 1 fila (dueño de la app) |
+| `perfil` | id, nombre, pin_respaldo *(hash PBKDF2 con sal)*, biometria_activa | 1 fila (dueño de la app) |
 | `contacto` | id, nombre, telefono, email | agenda local |
 | `cuenta` | id, nombre, tipo, saldo_inicial | — |
 | `movimiento` | id, **cuenta_id**, tipo, monto, descripcion, fecha, lat, lon, tiene_geo | `cuenta 1—N movimiento` |
-| `compra` | id, titulo, monto_estimado, monto_real, fecha, estado, **contacto_id**, lugar_nombre, lat, lon, tiene_geo | `contacto 1—N compra` |
+| `compra` | id, titulo, monto_estimado, monto_real, fecha, estado, **contacto_id**, lugar_nombre, lat, lon, tiene_geo, **cuenta_id**, **movimiento_id** | `contacto 1—N compra`; opcionalmente paga desde `cuenta` y genera un `movimiento` |
 | `compra_producto` | id, **compra_id**, nombre, precio_estimado, precio_real | `compra 1—N producto` |
-| `gasto_compartido` | id, titulo, monto_total, fecha | — |
+| `gasto_compartido` | id, titulo, monto_total, fecha, **cuenta_id**, **movimiento_id** | opcionalmente paga desde `cuenta` y genera un `movimiento` |
 | `gc_producto` | id, **gasto_id**, nombre, precio | `gasto 1—N producto` |
-| `gc_participante` | id, **gasto_id**, **contacto_id**, monto_asignado, pagado | `gasto N—M contacto` |
+| `gc_participante` | id, **gasto_id**, **contacto_id**, monto_asignado, pagado, **movimiento_id** | `gasto N—M contacto` |
 
 **Cálculos clave**
 - **Saldo de una cuenta** = `saldo_inicial` +  ingresos −  egresos (consulta en `CuentaRepositorio`).
+  Los egresos/ingresos incluyen los movimientos que generan automáticamente las compras pagadas y los
+  gastos compartidos enlazados a esa cuenta.
 - **Total de una compra** =  `precio_estimado` de sus productos; al marcarla realizada se usa el
-  **monto real** ( `precio_real`, editable).
+  **monto real** ( `precio_real`, editable), que es también el importe del egreso si se pagó desde una cuenta.
 - **Deuda de cada participante** = `monto_total / nº participantes` (equitativo), o valor personalizado
   guardado en `monto_asignado`.
 
