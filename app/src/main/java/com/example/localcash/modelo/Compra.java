@@ -17,10 +17,11 @@ public class Compra {
     private double lat;
     private double lon;
     private boolean tieneGeo;       // true si tiene coordenadas en el mapa
+    private long cuentaId;          // 0 si no tiene cuenta asociada
 
     public Compra(long id, String titulo, double montoEstimado, double montoReal, String fecha,
                   String estado, long contactoId, String contactoNombre,
-                  String lugarNombre, double lat, double lon, boolean tieneGeo) {
+                  String lugarNombre, double lat, double lon, boolean tieneGeo, long cuentaId) {
         this.id = id;
         this.titulo = titulo;
         this.montoEstimado = montoEstimado;
@@ -33,6 +34,7 @@ public class Compra {
         this.lat = lat;
         this.lon = lon;
         this.tieneGeo = tieneGeo;
+        this.cuentaId = cuentaId;
     }
 
     public long getId() {
@@ -81,6 +83,10 @@ public class Compra {
 
     public boolean isTieneGeo() {
         return tieneGeo;
+    }
+
+    public long getCuentaId() {
+        return cuentaId;
     }
 
     public boolean esAgendada() {

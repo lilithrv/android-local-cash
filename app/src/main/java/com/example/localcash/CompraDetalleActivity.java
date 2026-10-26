@@ -24,9 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localcash.adapter.CompraProductoAdapter;
 import com.example.localcash.datos.CompraRepositorio;
 import com.example.localcash.datos.ContactoRepositorio;
+import com.example.localcash.datos.CuentaRepositorio;
 import com.example.localcash.modelo.Compra;
 import com.example.localcash.modelo.CompraProducto;
 import com.example.localcash.modelo.Contacto;
+import com.example.localcash.modelo.Cuenta;
 import com.example.localcash.util.Formato;
 import com.example.localcash.util.Paginador;
 import com.example.localcash.util.Validaciones;
@@ -41,7 +43,7 @@ public class CompraDetalleActivity extends BaseActivity
 
     EditText etTitulo, etProductoNombre, etProductoPrecio, etTotalReal;
     RadioGroup rgEstado;
-    Spinner spContacto;
+    Spinner spContacto, spCuenta;
     Button btnAgregarProducto, btnElegirLugar, btnGuardar;
     TextView tvTotalEstimado, tvLugar;
     LinearLayout bloqueReal;
@@ -54,9 +56,13 @@ public class CompraDetalleActivity extends BaseActivity
 
     CompraRepositorio compraRepositorio;
     ContactoRepositorio contactoRepositorio;
+    CuentaRepositorio cuentaRepositorio;
 
     // Id de la compra en edición
     long editandoId = 0;
+
+    // Cuentas disponibles para descontar el egreso al realizar la compra
+    ArrayList<Cuenta> cuentas = new ArrayList<>();
 
     // Productos del carrito (en memoria hasta guardar)
     ArrayList<CompraProducto> productos = new ArrayList<>();
@@ -105,6 +111,7 @@ public class CompraDetalleActivity extends BaseActivity
         tvLugar = findViewById(R.id.tvLugar);
         btnElegirLugar = findViewById(R.id.btnElegirLugar);
         spContacto = findViewById(R.id.spContacto);
+        spCuenta = findViewById(R.id.spCuenta);
         btnGuardar = findViewById(R.id.btnGuardar);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -115,6 +122,7 @@ public class CompraDetalleActivity extends BaseActivity
 
         compraRepositorio = new CompraRepositorio(this);
         contactoRepositorio = new ContactoRepositorio(this);
+        cuentaRepositorio = new CuentaRepositorio(this);
 
         productoAdapter = new CompraProductoAdapter(productos, this);
         rvProductos.setLayoutManager(new LinearLayoutManager(this));
@@ -128,6 +136,7 @@ public class CompraDetalleActivity extends BaseActivity
         btnPagSiguienteProd.setOnClickListener(v -> { paginadorProd.siguiente(); mostrarPaginaProductos(); });
 
         cargarContactos();
+        cargarCuentas();
 
         btnAgregarProducto.setOnClickListener(v -> agregarProducto());
         btnElegirLugar.setOnClickListener(v -> abrirSelectorUbicacion());
@@ -159,6 +168,29 @@ public class CompraDetalleActivity extends BaseActivity
         spContacto.setAdapter(contactoAdapter);
     }
 
+    private void cargarCuentas() {
+        cuentas.clear();
+        cuentas.addAll(cuentaRepositorio.listar());
+        ArrayAdapter<Cuenta> cuentaAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, cuentas);
+        cuentaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCuenta.setAdapter(cuentaAdapter);
+    }
+
+    // Cuenta elegida en el Spinner, o null si no hay cuentas
+    private Cuenta cuentaSeleccionada() {
+        return (Cuenta) spCuenta.getSelectedItem();
+    }
+
+    private void seleccionarCuenta(long cuentaId) {
+        for (int i = 0; i < cuentas.size(); i++) {
+            if (cuentas.get(i).getId() == cuentaId) {
+                spCuenta.setSelection(i);
+                return;
+            }
+        }
+    }
+
     // Carga una compra existente y su carrito para editarla
     private void cargarCompra() {
         Compra compra = compraRepositorio.obtenerCompra(editandoId);
@@ -169,6 +201,7 @@ public class CompraDetalleActivity extends BaseActivity
         etTitulo.setText(compra.getTitulo());
         rgEstado.check(compra.esAgendada() ? R.id.rbAgendada : R.id.rbRealizada);
         seleccionarContacto(compra.getContactoId());
+        seleccionarCuenta(compra.getCuentaId());
 
         lugarNombre = compra.getLugarNombre() != null ? compra.getLugarNombre() : "";
         lugarLat = compra.getLat();
@@ -337,15 +370,18 @@ public class CompraDetalleActivity extends BaseActivity
         Contacto contacto = (Contacto) spContacto.getSelectedItem();
         long contactoId = (contacto != null) ? contacto.getId() : 0;
 
+        Cuenta cuenta = cuentaSeleccionada();
+        long cuentaId = (cuenta != null) ? cuenta.getId() : 0;
+
         long compraId;
         if (editandoId == 0) {
             String fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
             compraId = compraRepositorio.crearCompra(titulo, montoEstimado, montoReal, fecha,
-                    estado, contactoId, lugarNombre, lugarLat, lugarLon, lugarTieneGeo);
+                    estado, contactoId, lugarNombre, lugarLat, lugarLon, lugarTieneGeo, cuentaId);
         } else {
             compraId = editandoId;
             compraRepositorio.actualizarCompra(compraId, titulo, montoEstimado, montoReal,
-                    estado, contactoId, lugarNombre, lugarLat, lugarLon, lugarTieneGeo);
+                    estado, contactoId, lugarNombre, lugarLat, lugarLon, lugarTieneGeo, cuentaId);
             compraRepositorio.eliminarProductosDe(compraId);
         }
 

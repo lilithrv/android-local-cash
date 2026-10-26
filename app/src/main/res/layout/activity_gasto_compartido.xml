@@ -120,6 +120,21 @@
                 android:layout_marginTop="4dp"
                 android:orientation="vertical" />
 
+            <!-- Cuenta de la que sale el total -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/agc_cuenta"
+                android:textColor="@color/lc_hint" />
+
+            <Spinner
+                android:id="@+id/spCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:minHeight="48dp" />
+
             <Button
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"

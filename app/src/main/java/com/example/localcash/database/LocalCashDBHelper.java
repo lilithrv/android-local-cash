@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 public class LocalCashDBHelper extends SQLiteOpenHelper {
 
     public static final String NOMBRE_BD = "localcash.db";
-    public static final int VERSION_BD = 2;
+    public static final int VERSION_BD = 3;
 
     //  Tabla perfil (una sola fila con el dueño de la app)
     public static final String T_PERFIL = "perfil";
@@ -61,6 +61,10 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
     public static final String COMPRA_LON = "lon";
     public static final String COMPRA_TIENE_GEO = "tiene_geo";
 
+    // Cuenta de la que sale el dinero y movimiento (egreso) generado al realizarse
+    public static final String COMPRA_CUENTA_ID = "cuenta_id";
+    public static final String COMPRA_MOVIMIENTO_ID = "movimiento_id";
+
     // Tabla compra_producto
     public static final String T_COMPRA_PRODUCTO = "compra_producto";
     public static final String CPR_ID = "id";
@@ -76,6 +80,10 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
     public static final String GASTO_MONTO_TOTAL = "monto_total";
     public static final String GASTO_FECHA = "fecha";
 
+    // Cuenta de la que sale el total y movimiento (egreso) generado al crear el gasto
+    public static final String GASTO_CUENTA_ID = "cuenta_id";
+    public static final String GASTO_MOVIMIENTO_ID = "movimiento_id";
+
     // Tabla gc_producto
     public static final String T_GC_PRODUCTO = "gc_producto";
     public static final String GCP_ID = "id";
@@ -90,6 +98,9 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
     public static final String GCPA_CONTACTO_ID = "contacto_id";
     public static final String GCPA_MONTO_ASIGNADO = "monto_asignado";
     public static final String GCPA_PAGADO = "pagado";
+
+    // Movimiento (ingreso) generado cuando este participante paga su parte
+    public static final String GCPA_MOVIMIENTO_ID = "movimiento_id";
 
     public LocalCashDBHelper(Context context) {
         super(context, NOMBRE_BD, null, VERSION_BD);
@@ -139,6 +150,8 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
                 COMPRA_LAT + " REAL, " +
                 COMPRA_LON + " REAL, " +
                 COMPRA_TIENE_GEO + " INTEGER NOT NULL DEFAULT 0, " +
+                COMPRA_CUENTA_ID + " INTEGER, " +
+                COMPRA_MOVIMIENTO_ID + " INTEGER, " +
                 "FOREIGN KEY(" + COMPRA_CONTACTO_ID + ") REFERENCES " + T_CONTACTO + "(" + CONTACTO_ID + "))");
 
         db.execSQL("CREATE TABLE " + T_COMPRA_PRODUCTO + " (" +
@@ -153,7 +166,9 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
                 GASTO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 GASTO_TITULO + " TEXT NOT NULL, " +
                 GASTO_MONTO_TOTAL + " REAL NOT NULL DEFAULT 0, " +
-                GASTO_FECHA + " TEXT)");
+                GASTO_FECHA + " TEXT, " +
+                GASTO_CUENTA_ID + " INTEGER, " +
+                GASTO_MOVIMIENTO_ID + " INTEGER)");
 
         db.execSQL("CREATE TABLE " + T_GC_PRODUCTO + " (" +
                 GCP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -168,6 +183,7 @@ public class LocalCashDBHelper extends SQLiteOpenHelper {
                 GCPA_CONTACTO_ID + " INTEGER NOT NULL, " +
                 GCPA_MONTO_ASIGNADO + " REAL NOT NULL DEFAULT 0, " +
                 GCPA_PAGADO + " INTEGER NOT NULL DEFAULT 0, " +
+                GCPA_MOVIMIENTO_ID + " INTEGER, " +
                 "FOREIGN KEY(" + GCPA_GASTO_ID + ") REFERENCES " + T_GASTO + "(" + GASTO_ID + "), " +
                 "FOREIGN KEY(" + GCPA_CONTACTO_ID + ") REFERENCES " + T_CONTACTO + "(" + CONTACTO_ID + "))");
     }

@@ -196,6 +196,20 @@
                         android:inputType="numberDecimal"
                         android:textColor="@color/lc_text" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/acp_cuenta"
+                    android:textColor="@color/lc_hint" />
+
+                <Spinner
+                    android:id="@+id/spCuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="48dp" />
             </LinearLayout>
 
             <!-- Lugar -->

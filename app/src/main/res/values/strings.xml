@@ -140,6 +140,7 @@
     <string name="acp_total_estimado">Total estimado: $%1$,.0f</string>
     <string name="acp_monto_real_titulo">Monto real (lo que gastaste)</string>
     <string name="acp_total_real">Total real</string>
+    <string name="acp_cuenta">Cuenta (se descuenta al realizarse)</string>
     <string name="acp_lugar">Lugar</string>
     <string name="acp_elegir_lugar">Elegir lugar en el mapa</string>
     <string name="acp_sin_lugar">Sin lugar</string>
@@ -170,6 +171,7 @@
     <string name="agc_quitar">Quitar</string>
     <string name="agc_total">Total: $%1$,.0f</string>
     <string name="agc_participantes">Participantes (de tu agenda)</string>
+    <string name="agc_cuenta">Cuenta (se descuenta el total al guardar)</string>
     <string name="agc_sin_contactos">No tienes contactos. Agrégalos en la sección Contactos.</string>
     <string name="agc_btnguardar">Guardar y repartir</string>
     <string name="agc_lista">Gastos compartidos guardados</string>

@@ -3,10 +3,12 @@ package com.example.localcash;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localcash.adapter.GastoAdapter;
 import com.example.localcash.adapter.ProductoAdapter;
 import com.example.localcash.datos.ContactoRepositorio;
+import com.example.localcash.datos.CuentaRepositorio;
 import com.example.localcash.datos.GastoCompartidoRepositorio;
 import com.example.localcash.modelo.Contacto;
+import com.example.localcash.modelo.Cuenta;
 import com.example.localcash.modelo.GastoCompartido;
 import com.example.localcash.modelo.GcParticipante;
 import com.example.localcash.modelo.GcProducto;
@@ -44,10 +48,15 @@ public class GastoCompartidoActivity extends BaseActivity {
     Button btnAgregarProducto, btnGuardar;
     TextView tvTotal;
     LinearLayout llParticipantes;
+    Spinner spCuenta;
     RecyclerView rvProductos, rvGastos;
 
     GastoCompartidoRepositorio gastoRepositorio;
     ContactoRepositorio contactoRepositorio;
+    CuentaRepositorio cuentaRepositorio;
+
+    // Cuentas disponibles para descontar el total del gasto
+    ArrayList<Cuenta> cuentas = new ArrayList<>();
 
     // Productos que se van agregando antes de guardar (en memoria).
     ArrayList<GcProducto> productos = new ArrayList<>();
@@ -87,11 +96,13 @@ public class GastoCompartidoActivity extends BaseActivity {
         btnGuardar = findViewById(R.id.btnGuardar);
         tvTotal = findViewById(R.id.tvTotal);
         llParticipantes = findViewById(R.id.llParticipantes);
+        spCuenta = findViewById(R.id.spCuenta);
         rvProductos = findViewById(R.id.rvProductos);
         rvGastos = findViewById(R.id.rvGastos);
 
         gastoRepositorio = new GastoCompartidoRepositorio(this);
         contactoRepositorio = new ContactoRepositorio(this);
+        cuentaRepositorio = new CuentaRepositorio(this);
 
         productoAdapter = new ProductoAdapter(productos, this::quitarProducto);
         rvProductos.setLayoutManager(new LinearLayoutManager(this));
@@ -109,6 +120,7 @@ public class GastoCompartidoActivity extends BaseActivity {
         btnPagSiguiente.setOnClickListener(v -> { paginador.siguiente(); mostrarPagina(); });
 
         cargarParticipantes();
+        cargarCuentas();
         cargarGastos();
         actualizarTotal();
 
@@ -143,6 +155,15 @@ public class GastoCompartidoActivity extends BaseActivity {
             llParticipantes.addView(cb);
             casillas.add(cb);
         }
+    }
+
+    private void cargarCuentas() {
+        cuentas.clear();
+        cuentas.addAll(cuentaRepositorio.listar());
+        ArrayAdapter<Cuenta> cuentaAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, cuentas);
+        cuentaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCuenta.setAdapter(cuentaAdapter);
     }
 
     private void agregarProducto() {
@@ -210,8 +231,12 @@ public class GastoCompartidoActivity extends BaseActivity {
         double total = totalProductos();
         String fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
+        // Cuenta de la que sale el total (el dueño paga por adelantado); 0 si no hay cuentas.
+        Cuenta cuenta = (Cuenta) spCuenta.getSelectedItem();
+        long cuentaId = (cuenta != null) ? cuenta.getId() : 0;
+
         // 1) Cabecera del gasto.
-        long gastoId = gastoRepositorio.crearGasto(titulo, total, fecha);
+        long gastoId = gastoRepositorio.crearGasto(titulo, total, fecha, cuentaId);
         // 2) Productos.
         for (GcProducto p : productos) {
             gastoRepositorio.agregarProducto(gastoId, p.getNombre(), p.getPrecio());
